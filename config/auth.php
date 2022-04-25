@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users'
+        ]
     ],
 
     /*
@@ -107,5 +112,7 @@ return [
     */
 
     'password_timeout' => 10800,
+
+    'passport_Expire_day'=>env('PASSPORT_EXPIRE_DAY',30),
 
 ];
