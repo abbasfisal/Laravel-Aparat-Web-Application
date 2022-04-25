@@ -21,9 +21,12 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('password');
 
-            $table->string('avatar');
-            $table->string('website');
-            $table->string('verify_code');
+            $table->enum('type', \App\Models\User::TYPES)
+                ->default(\App\Models\User::USER_TYPE);
+
+            $table->string('avatar')->nullable();
+            $table->string('website')->nullable();
+            $table->string('verify_code')->nullable();
             $table->timestamp('verified_at')->nullable();
 
             $table->timestamps();
