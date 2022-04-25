@@ -21,7 +21,7 @@ class UserFactory extends Factory
             'email'=>$this->faker->safeEmail,
             'name'=>$this->faker->userName,
             'password'=>bcrypt('1234'),
-            'avatar'=>$this->faker->image,
+            'avatar'=>null,
             'website'=>$this->faker->url,
             'verify_code'=>null,
             'verified_at'=>now(),
