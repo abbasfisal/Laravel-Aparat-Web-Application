@@ -54,15 +54,17 @@ class User extends Authenticatable
     //-------------------------Methods
 
     /**
-     * find user by email | mobile for Login to system
+     * Login By Email | Mobile
      *
      * @param $username
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function findForPassport($username)
+    public function findForPassport($identifier)
     {
-        $user = User::query()->where('mobile', $username)->orWhere('email', $username)->first();
+        return $this->newQuery()
+            ->where('mobile', $identifier)
+            ->orWhere('email', $identifier)
+            ->first();
 
-        return $user;
     }
 }

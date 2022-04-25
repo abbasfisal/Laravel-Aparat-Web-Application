@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
+use Laravel\Passport\RouteRegistrar;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -34,7 +35,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     private function passportConfig()
     {
-        Passport::routes();
+
+        /*Passport::routes();*/
 
         Passport::tokensExpireIn(now()->addDays(config('auth.passport_Expire_day')));
     }
