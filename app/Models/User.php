@@ -50,4 +50,19 @@ class User extends Authenticatable
     protected $casts = [
         'verified_at' => 'datetime',
     ];
+
+    //-------------------------Methods
+
+    /**
+     * find user by email | mobile for Login to system
+     *
+     * @param $username
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
+    public function findForPassport($username)
+    {
+        $user = User::query()->where('mobile', $username)->orWhere('email', $username)->first();
+
+        return $user;
+    }
 }
