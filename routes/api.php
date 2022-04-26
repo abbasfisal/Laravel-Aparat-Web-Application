@@ -36,3 +36,5 @@ Route::post('/register', [AuthController::class, 'register'])
 Route::post('/register-verify', [AuthController::class, 'registerVerify'])
     ->name('auth.register.verify');
 
+Route::post('/resend-verification-code', [AuthController::class, 'resendVerificationCode'])
+    ->name('auth.register.resend.verification.code');

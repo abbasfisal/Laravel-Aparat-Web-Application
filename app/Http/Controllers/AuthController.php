@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\UserAlreadyRegistredException;
 use App\Http\Requests\RegisterNewUserRequest;
 use App\Http\Requests\RegisterVerifyUserRequest;
+use App\Http\Requests\ResendVerificationCodeRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
@@ -41,7 +42,7 @@ class AuthController extends Controller
 
 
         //generate verification code
-        $code = random_int(1000, 9999);
+        $code = random_verification_cdoe();
 
         User::query()->create([
             $field => $value,
@@ -102,5 +103,33 @@ class AuthController extends Controller
         $user->verify_code = null;
         $user->verified_at = now();
         $user->save();
+    }
+
+    public function resendVerificationCode(ResendVerificationCodeRequest $request)
+    {
+        $field = $request->getFieldName();
+        $value = $request->getFieldValue();
+
+        $user = User::query()->where($field, $value)
+            ->whereNull(User::col_verified_at)
+            ->first();
+
+        if (!empty($user)) {
+            $verify_code = User::col_verify_code;
+
+            $dateDiff = now()->diffInMinutes($user->updated_at);
+
+
+            if ($dateDiff > 60) {
+                $user->$verify_code = random_verification_cdoe();
+                $user->save();
+            }
+
+            Log::info("Resend-Verification-Code", ['Code' => $user->$verify_code]);
+            return response(['message' => 'Verification Code Resend'], 200);
+        }
+
+        throw new ModelNotFoundException('user not found or already Verified');
+
     }
 }
