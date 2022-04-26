@@ -64,6 +64,19 @@ class User extends Authenticatable
         'verified_at' => 'datetime',
     ];
 
+    /*
+     |--------------------------------------------------------------------------
+     | User Relations
+     |--------------------------------------------------------------------------
+     |
+     |
+     */
+
+    public function channels()
+    {
+        return $this->hasOne(Channel::class);
+    }
+
     //-------------------------Methods
 
     /**
