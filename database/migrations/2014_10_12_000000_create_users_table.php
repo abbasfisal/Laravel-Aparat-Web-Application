@@ -15,11 +15,11 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('mobile', 13)->unique();
-            $table->string('email')->unique();
+            $table->string('mobile', 13)->unique()->nullable();
+            $table->string('email')->unique()->nullable();
 
-            $table->string('name');
-            $table->string('password');
+            $table->string('name')->nullable();
+            $table->string('password')->nullable();
 
             $table->enum('type', \App\Models\User::TYPES)
                 ->default(\App\Models\User::USER_TYPE);

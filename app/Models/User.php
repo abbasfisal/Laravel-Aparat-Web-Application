@@ -11,26 +11,39 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'users';
+
     const ADMIN_TYPE = 'admin';
     const USER_TYPE = 'user';
     const TYPES = [self::ADMIN_TYPE, self::USER_TYPE];
-    protected $table = 'users';
+
+    const col_id = 'id';
+    const col_mobile = 'mobile';
+    const col_type = 'type';
+    const col_email = 'email';
+    const col_name = 'name';
+    const col_password = 'password';
+    const col_avatar = 'avatar';
+    const col_website = 'website';
+    const col_verify_code = 'verify_code';
+    const col_verified_at = 'verified_at';
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'mobile',
-        'type',
-        'email',
-        'name',
-        'password',
-        'avatar',
-        'website',
-        'verify_code',
-        'verified_at',
+        self::col_mobile,
+        self::col_type,
+        self::col_email,
+        self::col_name,
+        self::col_password,
+        self::col_avatar,
+        self::col_website,
+        self::col_verify_code,
+        self::col_verified_at,
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -38,8 +51,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'verify_code',
+        self::col_password,
+        self::col_verify_code,
     ];
 
     /**
@@ -62,9 +75,17 @@ class User extends Authenticatable
     public function findForPassport($identifier)
     {
         return $this->newQuery()
-            ->where('mobile', $identifier)
-            ->orWhere('email', $identifier)
+            ->where(self::col_mobile, $identifier)
+            ->orWhere(self::col_email, $identifier)
             ->first();
+
+    }
+
+    public function setMobileAttribute($value)
+    {
+        $mobile = '+98' . substr($value, -10, 10);
+
+        $this->attributes[self::col_mobile] = $mobile;
 
     }
 }
