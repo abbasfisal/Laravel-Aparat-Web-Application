@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use App\Rules\MobileRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResendVerificationCodeRequest extends FormRequest
+class RegisterNewUserRequest extends FormRequest
 {
     use GetRegisterFiledNamdAndFieldValueTrait;
 

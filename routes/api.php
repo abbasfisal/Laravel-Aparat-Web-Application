@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Laravel\Passport\Http\Controllers\TransientTokenController;
@@ -38,3 +39,13 @@ Route::post('/register-verify', [AuthController::class, 'registerVerify'])
 
 Route::post('/resend-verification-code', [AuthController::class, 'resendVerificationCode'])
     ->name('auth.register.resend.verification.code');
+
+//chage Email
+Route::post('change-email', [UserController::class, 'changeEmail'])
+    ->name('change.email')
+    ->middleware('auth:api');
+
+//submit for change email
+Route::post('change-email-submit', [UserController::class, 'ChangeEmailSubmit'])
+    ->name('change.email.submit')
+    ->middleware('auth:api');

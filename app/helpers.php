@@ -16,15 +16,14 @@ if (!function_exists('to_valid_mobile_number')) {
 
 if (!function_exists('random_verification_code')) {
 
+    /**
+     * make random code
+     * @return int
+     * @throws Exception
+     */
     function random_verification_cdoe()
     {
         return random_int(11111, 99999);
-    }
-}
-
-if(!function_exists('tovliad0LD')){
-    function tovliad0LD(){
-
     }
 }
 

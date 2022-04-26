@@ -116,5 +116,9 @@ return [
     'passport_Expire_day' => env('PASSPORT_EXPIRE_DAY', 30),
 
     //cache registration time in Minute
-    'register_cache_expiration' => env('EXPIRATION_REGISTER_CACHE', 1440) //24*60
+    'register_cache_expiration' => env('EXPIRATION_REGISTER_CACHE', 1440), //24*60
+
+    //expirtion for changing email cache
+    'change-email-cache-expirtion'=>env('EXPIRE_ONE_DAY',1440),
+
 ];
