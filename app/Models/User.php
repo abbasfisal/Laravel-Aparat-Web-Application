@@ -94,10 +94,12 @@ class User extends Authenticatable
 
     }
 
+    /**
+     * save mobile according to the pattern =>+989-xxx-xxx-xxx
+     * @param $value
+     */
     public function setMobileAttribute($value)
     {
-
-
         $this->attributes[self::col_mobile] = to_valid_mobile_number($value);
 
     }

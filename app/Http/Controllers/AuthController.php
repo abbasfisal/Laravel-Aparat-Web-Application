@@ -39,6 +39,7 @@ class AuthController extends Controller
                 //اگر کاربر از قبول ثبت نام کرده بود و وری_فای شده بود
                 //باید یک خطا بش بدیم
                 $verifed_at = User::col_verified_at;
+
                 if ($user->$verifed_at) {
                     throw new UserAlreadyRegistredException('you already registred completely');
                 }
@@ -55,14 +56,6 @@ class AuthController extends Controller
                 User::col_verify_code => $code
             ]);
 
-            //پیش فرض وقتی کاربر جدید درست میشه
-            //یک اسم برای کانالش میذاریم
-            //این اسم یا از موبایلش هست یا از ایمیل
-            $channel_value = $field === 'mobile' ? Str::after($value, '+98') : Str::before($value, '@');
-
-            $user->channels()->create([
-                Channel::col_name => $channel_value
-            ]);
 
             DB::commit();
 
