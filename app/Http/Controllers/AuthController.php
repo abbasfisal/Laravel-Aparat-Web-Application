@@ -20,12 +20,8 @@ class AuthController extends Controller
      */
     public function register(RegisterNewUserRequest $request)
     {
-        //get field name
-        $field = $request->has('email') ? 'email' : 'mobile';
-
-        //get field value
-        $value = $request->get($field);
-
+        $field = $request->getFieldName();
+        $value = $request->getFieldValue();
 
 
         $user = User::query()->where($field, $value)->first();
@@ -66,10 +62,11 @@ class AuthController extends Controller
      */
     public function registerVerify(RegisterVerifyUserRequest $request)
     {
-        $field = $request->has('email') ? 'email' : 'mobile';
-        $value = $request->get($field);
+        $field = $request->getFieldName();
+        $value = $request->getFieldValue();
 
         $code = $request->code;
+
 
         $user = User::query()
             ->where(User::col_verify_code, $code)

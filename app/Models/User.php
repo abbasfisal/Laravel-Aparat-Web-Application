@@ -83,9 +83,9 @@ class User extends Authenticatable
 
     public function setMobileAttribute($value)
     {
-        $mobile = '+98' . substr($value, -10, 10);
 
-        $this->attributes[self::col_mobile] = $mobile;
+
+        $this->attributes[self::col_mobile] = to_valid_mobile_number($value);
 
     }
 }
