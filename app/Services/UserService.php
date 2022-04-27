@@ -8,8 +8,12 @@ use App\Exceptions\UserAlreadyRegistredException;
 use App\Http\Requests\Auth\RegisterNewUserRequest;
 use App\Http\Requests\Auth\RegisterVerifyUserRequest;
 use App\Http\Requests\Auth\ResendVerificationCodeRequest;
+use App\Http\Requests\User\ChangeEmailRequest;
+use App\Http\Requests\User\ChangeEmailSubmitRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -120,7 +124,59 @@ class UserService extends BaseService
         throw new ModelNotFoundException('user not found or already Verified');
     }
 
+    public static function changeEmail(ChangeEmailRequest $request)
+    {
+        try {
 
+            $email = $request->email;
+            $userId = Auth::id();
+            $code = random_verification_cdoe();
+            $expire = now()->addMinutes(env('expire_one_day'));
+
+            Cache::put(
+                'change.email.for.user.' . $userId,
+                compact('email', 'code'),
+                $expire
+            );
+
+            //------ Log and Response
+            Log::info('change.email.for.user.' . $userId, compact('email', 'code'));
+            //TODO ارسال ایمیل به کاربر جهت تغییر ایمیل
+            return response(['message' => 'email for change email address was sent'], 200);
+            //------
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response(['message' => 'خطایی رخ داده و سرورو قادر به ارسال کد فعال سازی نیست'],
+                500);
+        }
+    }
+
+    public static function changeEmailSubmit(ChangeEmailSubmitRequest $request)
+    {
+
+        $userId = Auth::id();
+
+        $cache_key = 'change.email.for.user.' . $userId;
+        $cache = Cache::get($cache_key);
+
+        if (
+            empty($cache) ||
+            $cache['code'] != $request->code
+        ) {
+            return response(['message' => 'درخواست نامتعبر است'], 400);
+        }
+
+        $user = Auth::user();
+        $email = User::col_email;
+        $user->$email = Cache::get('email');
+        $user->save();
+
+        Cache::forget($cache_key);
+
+        return response([
+            'message' => 'ایمیل با موفقیت تغییر یافت'
+        ], 200);
+    }
     /**
      * if user was empty then throw model not found exception
      * @param ] $user
