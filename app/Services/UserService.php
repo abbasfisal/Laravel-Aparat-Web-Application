@@ -10,11 +10,13 @@ use App\Http\Requests\Auth\RegisterVerifyUserRequest;
 use App\Http\Requests\Auth\ResendVerificationCodeRequest;
 use App\Http\Requests\User\ChangeEmailRequest;
 use App\Http\Requests\User\ChangeEmailSubmitRequest;
+use App\Http\Requests\User\ChangePasswordRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class UserService extends BaseService
@@ -177,6 +179,45 @@ class UserService extends BaseService
             'message' => 'ایمیل با موفقیت تغییر یافت'
         ], 200);
     }
+
+
+    /**
+     * change user password
+     * @param ChangePasswordRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public static function changePassword(ChangePasswordRequest $request)
+    {
+        try {
+
+            $old_password = $request->old_password;
+            $new_password = $request->new_password;
+
+            $user = Auth::user();
+
+            if (!Hash::check($old_password, $user->getAuthPassword())) {
+                return jr('پسورد مطابقت ندارد', 400);
+            }
+
+            $user->password = bcrypt($new_password);
+            $user->save();
+            return jr('passowrd changed successfully', 200);
+
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return jr('error while changing passowrd', 500);
+        }
+    }
+
+
+
+
+
+
+
+    //-------------------------- private methods
+
     /**
      * if user was empty then throw model not found exception
      * @param ] $user
@@ -198,4 +239,5 @@ class UserService extends BaseService
         $user->verified_at = now();
         $user->save();
     }
+
 }

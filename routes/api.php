@@ -61,6 +61,8 @@ Route::group(['middleware' => 'auth:api', 'as' => 'change.'], function () {
     Route::post('change-email-submit', [UserController::class, 'ChangeEmailSubmit'])
         ->name('email.submit');
 
+    Route::post('change-password', [UserController::class, 'changePassword'])
+        ->name('password');
 
 });
 
