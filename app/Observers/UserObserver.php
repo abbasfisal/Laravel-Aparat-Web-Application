@@ -16,6 +16,7 @@ class UserObserver
      */
     public function created(User $user)
     {
+        //اینجوری میکنم که هارد کد نشه اسم ستون های جدول
         $col_email = User::col_email;
         $col_mobile = User::col_mobile;
 
