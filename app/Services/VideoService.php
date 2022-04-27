@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Http\Requests\Video\UploadVideoBannerRequest;
 use App\Http\Requests\Video\UploadVideoRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -16,6 +17,7 @@ class VideoService extends BaseService
     {
         try {
 
+dd($request->all());
             $video = $request->file('video');
 
 
@@ -30,6 +32,29 @@ class VideoService extends BaseService
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return jr('error while uploading video', 500);
+        }
+
+    }
+
+
+    public static function uploadBanner(UploadVideoBannerRequest $request)
+    {
+        try {
+
+            $banner = $request->file('banner');
+
+
+            $bannerName = time(). Str::random(15) .'-Banner' . '.'. $banner->extension();
+
+            $path = public_path('videos/tmp');
+
+            $banner->move($path, $bannerName);
+
+            return response(['banner' => $bannerName]);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return jr('error while uploading video Banner', 500);
         }
 
     }

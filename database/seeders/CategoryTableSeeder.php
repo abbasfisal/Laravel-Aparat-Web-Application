@@ -20,6 +20,7 @@ class CategoryTableSeeder extends Seeder
         }
 
         $data = [
+            'عمومی' => ['icon' => '', 'banner' => ''],
             'خبری' => ['icon' => '', 'banner' => ''],
             'علم و تکنولوژی' => ['icon' => '', 'banner' => ''],
             'ورزشی' => ['icon' => '', 'banner' => ''],

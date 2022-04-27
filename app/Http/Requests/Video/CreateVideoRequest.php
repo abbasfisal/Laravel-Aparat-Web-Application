@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Video;
 
+use App\Rules\UploadedVideoBannerIdRule;
+use App\Rules\UploadedVideoIdRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateVideoRequest extends FormRequest
@@ -25,15 +27,15 @@ class CreateVideoRequest extends FormRequest
     {
 
         return [
-            'video_id' => 'required|',//TODO video_id validation
+            'video_id' => ['required', new UploadedVideoIdRule()],//TODO video_id validation
             'title' => 'required|string|max:255',
             'category' => 'required|exists:categories,id',
             'info' => 'nullable|string',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id',
-            'playlist' => 'nullable|exists:playlists,id',
+            'playlist' => 'nullable|exists:playlists,id',//TODO slelct user own playlist
             'channel_category' => 'nullable',//TODO channel category
-            'banner' => 'nullable|string',//TODO banner must be uploaded before create video
+            'banner' => ['nullable','string', new UploadedVideoBannerIdRule()],//TODO banner must be uploaded before create video
             'publish_at' => 'nullable|date'
         ];
     }
