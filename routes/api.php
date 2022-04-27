@@ -67,8 +67,15 @@ Route::group(['middleware' => 'auth:api', 'as' => 'change.'], function () {
 /**
  * Routes For Channel
  */
-Route::group(['middleware'=>'auth:api' ,'prefix'=>'channel'] , function (){
+Route::group(['middleware' => 'auth:api', 'prefix' => 'channel'], function () {
 
-    Route::put('/{id?}',[ChannelController::class , 'update']);
+    Route::put('/{id?}', [ChannelController::class, 'update'])
+        ->name('channel.update');
 
+    Route::match(['put', 'post'], '', [ChannelController::class, 'updloadBanner'])
+        ->name('channel.upload.banner');
+
+
+    Route::post('/update-socials', [ChannelController::class, 'updateSocials'])
+        ->name('channel.update.socials');
 });
