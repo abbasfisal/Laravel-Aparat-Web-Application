@@ -14,6 +14,10 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
+//        User::truncate();
+        if (User::count()) {
+            return ;
+        }
         static::createAdmin();
         static::createUser();
     }

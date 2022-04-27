@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Laravel\Passport\Http\Controllers\TransientTokenController;
@@ -80,4 +81,20 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'channel'], function () {
 
     Route::post('/update-socials', [ChannelController::class, 'updateSocials'])
         ->name('channel.update.socials');
+});
+
+
+/**
+ * Route For Video
+ */
+Route::group(['middleware' => 'auth:api', 'prefix' => '/video'], function () {
+
+    Route::post('/upload', [VideoController::class, 'upload'])
+        ->name('video.upload');
+
+
+    Route::post('/', [VideoController::class, 'create'])
+        ->name('video.create');
+
+
 });

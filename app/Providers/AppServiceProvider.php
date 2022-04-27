@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->setDefaultStringLenght();
+        //Schema::disableForeignKeyConstraints();
     }
 
     private function setDefaultStringLenght(): void
