@@ -15,6 +15,7 @@ class Channel extends Model
     const col_user_id = 'user_id';
     const col_info = 'info';
     const col_name = 'name';
+    const col_website ='website';
     const col_banners = 'banner';
     const col_socials = 'socials';
 
@@ -22,6 +23,7 @@ class Channel extends Model
         self::col_user_id,
         self::col_info,
         self::col_name,
+        self::col_website,
         self::col_banners,
         self::col_socials,
     ];

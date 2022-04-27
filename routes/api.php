@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
@@ -31,21 +32,43 @@ Route::group(['middleware' => 'throttle'], function () {
 
 
 //---------
-Route::post('/register', [AuthController::class, 'register'])
-    ->name('auth.register');
+/**
+ * روت های مربوط به auth
+ */
+Route::group([], function () {
 
-Route::post('/register-verify', [AuthController::class, 'registerVerify'])
-    ->name('auth.register.verify');
+    Route::post('/register', [AuthController::class, 'register'])
+        ->name('auth.register');
 
-Route::post('/resend-verification-code', [AuthController::class, 'resendVerificationCode'])
-    ->name('auth.register.resend.verification.code');
+    Route::post('/register-verify', [AuthController::class, 'registerVerify'])
+        ->name('auth.register.verify');
+
+    Route::post('/resend-verification-code', [AuthController::class, 'resendVerificationCode'])
+        ->name('auth.register.resend.verification.code');
+
+});
+
+/**
+ * Routes For Change and verify  Email
+ */
+Route::group(['middleware' => 'auth:api', 'as' => 'change.'], function () {
 
 //chage Email
-Route::post('change-email', [UserController::class, 'changeEmail'])
-    ->name('change.email')
-    ->middleware('auth:api');
+    Route::post('change-email', [UserController::class, 'changeEmail'])
+        ->name('email');
 
 //submit for change email
-Route::post('change-email-submit', [UserController::class, 'ChangeEmailSubmit'])
-    ->name('change.email.submit')
-    ->middleware('auth:api');
+    Route::post('change-email-submit', [UserController::class, 'ChangeEmailSubmit'])
+        ->name('email.submit');
+
+
+});
+
+/**
+ * Routes For Channel
+ */
+Route::group(['middleware'=>'auth:api' ,'prefix'=>'channel'] , function (){
+
+    Route::put('/{id?}',[ChannelController::class , 'update']);
+
+});

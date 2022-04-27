@@ -27,3 +27,12 @@ if (!function_exists('random_verification_code')) {
     }
 }
 
+if (!function_exists('jr')) {
+    /**
+     * create a json reponse
+     */
+    function jr(string $message, int $code)
+    {
+        return response(['message' => $message], $code);
+    }
+}
