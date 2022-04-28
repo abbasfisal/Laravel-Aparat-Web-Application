@@ -36,3 +36,11 @@ if (!function_exists('jr')) {
         return response(['message' => $message], $code);
     }
 }
+
+if (!function_exists('uniqueId')) {
+    function uniqueId(int $value)
+    {
+        $hash = new \Hashids\Hashids(env('app_key'), 10);
+        return $hash->encode($value);
+    }
+}

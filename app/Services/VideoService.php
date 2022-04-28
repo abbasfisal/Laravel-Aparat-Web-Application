@@ -14,17 +14,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class VideoService extends BaseService
 {
-
+    /**
+     * آپلود ویدیو به در پوشه تمپ
+     * @param UploadVideoRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public static function uploadVideo(UploadVideoRequest $request)
     {
         try {
 
 
             $video = $request->file('video');
-
 
             $videoName = time() . Str::random(15) . '.' . $video->extension();
 
@@ -41,13 +45,16 @@ class VideoService extends BaseService
 
     }
 
-
+    /**
+     * آپلود بنر ویدیو در پوشه تمپ
+     * @param UploadVideoBannerRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public static function uploadBanner(UploadVideoBannerRequest $request)
     {
         try {
 
             $banner = $request->file('banner');
-
 
             $bannerName = time() . Str::random(15) . '-Banner' . '.' . $banner->extension();
 
@@ -58,48 +65,52 @@ class VideoService extends BaseService
             return response(['banner' => $bannerName]);
 
         } catch (\Exception $e) {
+
             Log::error($e->getMessage());
             return jr('error while uploading video Banner', 500);
         }
 
     }
 
+    /**
+     * ایجاد یک ویدیو به همراه انتقال ویدیو و بنر مربوطه از پوشه تمپ به پوشه اصلی
+     * @param CreateVideoRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function create(CreateVideoRequest $request)
     {
         try {
 
             DB::beginTransaction();
-
-            $tmp_path = 'tmp/' . $request->video_id; //مسیر موقت ذخیره ویدیو
-            $saving_path = Auth::id() . '/' . $request->video_id; //مسیر اصلی ذخیره ویودیو
-
-            Storage::disk('videos')->move($tmp_path, $saving_path); //TODO موقع دیپلوی این کد پاک شود
-            //Storage::disk('videos')->move($tmp_path, $saving_path);//TODO این کد اصلی هست موقع دیپلو
-
-            if ($request->banner) {
-
-
-                $tmp_path_banner = 'tmp/' . $request->banner;
-                $video_name = Str::before($request->video_id, '.mp4');
-                $banner_name = $video_name . '-Banner' . '.jpg';
-
-                Storage::disk('videos')->move($tmp_path_banner, Auth::id() . '/' . $banner_name);
-
-            }
+            //بدست اوردن زمان ویدیو به ثانیه توسط پکیج ffmpeg
+            $duration = FFMpeg::fromDisk('videos')->open('/tmp/'.$request->video_id)->getDurationInSeconds();
+            //ذخیره ویدوی
             $video = Video::query()->create([
                 Video::col_title => $request->title,
                 Video::col_user_id => Auth::id(),
                 Video::col_category_id => $request->category,
                 Video::col_channel_category_id => $request->channel_category,
-                Video::col_slug => $request->video_id,
+                Video::col_slug => '',
                 Video::col_info => $request->info,
                 Video::col_duration => 0, //TODO get video Time
-                Video::col_banner => $request->banner,
+                Video::col_banner => $duration,
                 Video::col_publish_at => $request->publish_at,
             ]);
+            //ایجاد اسلاگ یکتا از روی آی دی
+            $video->slug = uniqueId($video->id) . '.mp4';
+            $video->banner = (Str::before($video->slug, '.mp4')) . '-Banner.jpg';
+            $video->save();
+
+            //ذخیره فایل ویدیو
+            Storage::disk('videos')->move('/tmp/' . $request->video_id, Auth::id() . '/' . $video->slug);
+
+            //ذخیره بنر ویدیو
+            if ($request->banner) {
+                Storage::disk('videos')->move('/tmp/' . $request->banner, Auth::id() . '/' . $video->banner);
+            }
 
 
-            //Play List
+            //تخصیص ویدیو به لیست پخش
             if ($request->playlist) {
                 $playlist = PlayList::find($request->playlist);
 
@@ -107,18 +118,17 @@ class VideoService extends BaseService
             }
 
 
-            //Tag
+            //تخصیص تگ ها به ویدو
             if (!empty($request->tags)) {
 
                 $video->tags()->attach($request->tags);
             }
-            //DB::rollBack();
             DB::commit();
 
             return response(['message' => 'video uploaded succ', 'data' => $video], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
+            Log::error($e);
             return jr('error while moving video form tmp to user folder', 500);
         }
 

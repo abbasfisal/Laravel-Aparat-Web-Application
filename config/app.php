@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
 
+
         /*
          * Application Service Providers...
          */
@@ -179,6 +180,12 @@ return [
          * My Service Provider
          */
         \App\Providers\ModelServiceProvider::class,
+
+        /*
+         * From Packages
+         */
+        ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
+
 
     ],
 
@@ -234,6 +241,11 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        /*
+         * From packages
+         */
+        'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class
+
 
     ],
 
