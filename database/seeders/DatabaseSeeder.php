@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
@@ -18,8 +19,11 @@ class DatabaseSeeder extends Seeder
 
         // \App\Models\User::factory(10)->create();
         $this->call(UserTableSeeder::class);
+
         $this->call(CategoryTableSeeder::class);
         $this->call(TagTableSeeder::class);
+
+        Artisan::call('passport:install');
 
         Schema::enableForeignKeyConstraints();
     }

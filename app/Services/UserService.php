@@ -44,7 +44,7 @@ class UserService extends BaseService
                     throw new UserAlreadyRegistredException('you already registred completely');
                 }
 
-                return response(['verify code already sent'], 200);
+                return jr('verify code already sent', 200);
             }
 
 
@@ -62,7 +62,7 @@ class UserService extends BaseService
             //TODO send verify code with sms
             Log::info('SEND-REGISTER-CODE-TO-USER', ['code' => $code]);
 
-            return response(['message' => 'user registerd'], 200);
+            return jr('user registerd', 200);
 
 
         } catch (\Exception $e) {
@@ -74,7 +74,7 @@ class UserService extends BaseService
                 throw $e;
             }
             Log::error($e->getMessage());
-            return response(['خطایی رخ داده است'], 500);
+            return jr('خطایی رخ داده است', 500);
         }
     }
 
@@ -120,7 +120,7 @@ class UserService extends BaseService
             }
 
             Log::info("Resend-Verification-Code", ['Code' => $user->$verify_code]);
-            return response(['message' => 'Verification Code Resend'], 200);
+            return jr('Verification Code Resend', 200);
         }
 
         throw new ModelNotFoundException('user not found or already Verified');
@@ -144,12 +144,16 @@ class UserService extends BaseService
             //------ Log and Response
             Log::info('change.email.for.user.' . $userId, compact('email', 'code'));
             //TODO ارسال ایمیل به کاربر جهت تغییر ایمیل
-            return response(['message' => 'email for change email address was sent'], 200);
+
+            return jr('email for change email address was sent', 200);
+
             //------
         } catch (\Exception $e) {
+
             Log::error($e->getMessage());
-            return response(['message' => 'خطایی رخ داده و سرورو قادر به ارسال کد فعال سازی نیست'],
-                500);
+
+            return jr('خطایی رخ داده و سرورو قادر به ارسال کد فعال سازی نیست', 500);
+
         }
     }
 

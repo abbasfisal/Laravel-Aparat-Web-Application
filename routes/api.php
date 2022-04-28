@@ -101,3 +101,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/video'], function () {
 
 
 });
+
+//------------- get grand and secret (for auth) ----
+Route::get('/passport' , function(){
+    return \Illuminate\Support\Facades\DB::table('oauth_clients')->where('id',2)->first();
+});

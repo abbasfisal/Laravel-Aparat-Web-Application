@@ -21,7 +21,7 @@ class UserObserver
         $col_mobile = User::col_mobile;
 
 
-        $chanel_value = !empty ($user->$col_mobile)
+        $chanel_value = !empty($user->$col_mobile)
             ? Str::after($user->$col_mobile, '+98')
             : Str::before($user->$col_email, '@');
 

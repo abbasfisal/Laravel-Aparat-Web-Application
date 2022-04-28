@@ -38,7 +38,7 @@ class ChannelService extends BaseService
             $chnnel = $user->channels()
                 ->update($request->only(['name', 'info']));
 
-            //update use website
+            //update user website col
             $user->website = $request->website;
             $user->save();
 

@@ -24,6 +24,10 @@ class CreateVideosTable extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
+            $table->foreignId('channel_category_id')->constrained('channels')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
             $table->string('slug');
             $table->string('title');
             $table->text('info')->nullable();

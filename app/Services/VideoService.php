@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Http\Requests\Video\UploadVideoBannerRequest;
 use App\Http\Requests\Video\UploadVideoRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -17,11 +16,11 @@ class VideoService extends BaseService
     {
         try {
 
-dd($request->all());
+
             $video = $request->file('video');
 
 
-            $videoName = time(). Str::random(15) .'.'. $video->extension();
+            $videoName = time() . Str::random(15) . '.' . $video->extension();
 
             $path = public_path('videos/tmp');
 
@@ -44,7 +43,7 @@ dd($request->all());
             $banner = $request->file('banner');
 
 
-            $bannerName = time(). Str::random(15) .'-Banner' . '.'. $banner->extension();
+            $bannerName = time() . Str::random(15) . '-Banner' . '.' . $banner->extension();
 
             $path = public_path('videos/tmp');
 

@@ -24,7 +24,6 @@ class ChangeEmailSubmitRequest extends FormRequest
     public function rules()
     {
         return [
-
             'code' => 'required|string'
         ];
     }
