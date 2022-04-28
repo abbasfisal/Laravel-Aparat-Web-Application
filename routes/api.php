@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
@@ -101,6 +102,19 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/video'], function () {
 
 
 });
+
+/**
+ * Roue For Categories
+ */
+Route::group(['middleware'=>'auth:api' , 'prefix'=>'/category'], function(){
+
+    Route::get('/' , [CategoryController::class , 'getAllCategories'] )
+        ->name('category.get.all');
+
+    Route::get('/my' , [CategoryController::class , 'getMyCategories'])
+        ->name('category.get.my');
+});
+
 
 //------------- get grand and secret (for auth) ----
 Route::get('/passport' , function(){
