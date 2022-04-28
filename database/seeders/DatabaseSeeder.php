@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CategoryTableSeeder::class);
         $this->call(TagTableSeeder::class);
+        $this->call(PlayListTableSeeder::class);
+
 
         Artisan::call('passport:install');
 

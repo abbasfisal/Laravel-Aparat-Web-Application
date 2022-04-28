@@ -25,6 +25,7 @@ class VideoController extends Controller
     public function create(CreateVideoRequest $request)
     {
 
-        dd(request()->all());
+        return VideoService::create($request);
+
     }
 }

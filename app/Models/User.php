@@ -77,6 +77,11 @@ class User extends Authenticatable
         return $this->hasOne(Channel::class);
     }
 
+    public function playlists()
+    {
+        return $this->hasMany(PlayList::class);
+    }
+
     //-------------------------Methods
 
     /**

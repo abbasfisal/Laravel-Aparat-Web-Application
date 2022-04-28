@@ -24,7 +24,8 @@ class CreateVideosTable extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('channel_category_id')->constrained('channels')
+            $table->foreignId('channel_category_id')
+                ->constrained('categories','id')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 

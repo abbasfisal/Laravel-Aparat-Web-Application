@@ -16,7 +16,7 @@ class CreatePlaylistVideosTable extends Migration
         Schema::create('playlist_videos', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('playlist_id')->constrained('playlists')
+            $table->foreignId('play_list_id')->constrained('playlists')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
