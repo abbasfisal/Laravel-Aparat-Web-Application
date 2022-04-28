@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use App\Models\Category;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryIdRule implements Rule
 {
@@ -40,7 +41,7 @@ class CategoryIdRule implements Rule
         if ($this->categoryType === 'private') {
             return Category::query()
                 ->where('id', $value)
-                ->whereNotNull('user_id')
+                ->where('user_id' ,Auth::id())
                 ->count();
         }
 

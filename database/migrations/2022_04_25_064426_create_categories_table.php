@@ -19,7 +19,7 @@ class CreateCategoriesTable extends Migration
                 ->nullable()
                 ->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('title');
-            $table->string('icon');
+            $table->string('icon')->nullable();
             $table->string('banner')->nullable();
             $table->timestamps();
         });

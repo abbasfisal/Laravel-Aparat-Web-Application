@@ -20,27 +20,31 @@ class CategoryTableSeeder extends Seeder
         }
 
         $data = [
-            'عمومی' => ['icon' => '', 'banner' => ''],
-            'خبری' => ['icon' => '', 'banner' => ''],
-            'علم و تکنولوژی' => ['icon' => '', 'banner' => ''],
-            'ورزشی' => ['icon' => '', 'banner' => ''],
-            'بانوان' => ['icon' => '', 'banner' => ''],
-            'بازی' => ['icon' => '', 'banner' => ''],
-            'طنز' => ['icon' => '', 'banner' => ''],
-            'آموزشی' => ['icon' => '', 'banner' => ''],
-            'تفریحی' => ['icon' => '', 'banner' => ''],
-            'فیلم' => ['icon' => '', 'banner' => ''],
-            'مذهبی' => ['icon' => '', 'banner' => ''],
-            'موسیقی' => ['icon' => '', 'banner' => ''],
-            'سیاسی' => ['icon' => '', 'banner' => ''],
-            'حوادث' => ['icon' => '', 'banner' => ''],
-            'گردشگری' => ['icon' => '', 'banner' => ''],
-            'حیوانات' => ['icon' => '', 'banner' => ''],
-            'متفرقه' => ['icon' => '', 'banner' => ''],
-            'تبلیغات' => ['icon' => '', 'banner' => ''],
-            'هنری' => ['icon' => '', 'banner' => ''],
-            'کارتون' => ['icon' => '', 'banner' => ''],
-            'سلامت' => ['icon' => '', 'banner' => '']
+            'عمومی' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'خبری' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'علم و تکنولوژی' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'ورزشی' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'بانوان' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'بازی' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'طنز' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'آموزشی' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'تفریحی' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'فیلم' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'مذهبی' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'موسیقی' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'سیاسی' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'حوادث' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'گردشگری' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'حیوانات' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'متفرقه' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'تبلیغات' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'هنری' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'کارتون' => ['icon' => null, 'banner' => null, 'user_id' => null],
+            'سلامت' => ['icon' => null, 'banner' => null, 'user_id' => null],
+
+            /*category for user 1 (normal user )*/
+            'دسته بندی یک' => ['icon' => null, 'banner' => null, 'user_id' => 2],
+
 
         ];
 
@@ -49,7 +53,8 @@ class CategoryTableSeeder extends Seeder
             Category::query()->create([
                 Category::col_title => $key,
                 Category::col_icon => $value['icon'],
-                Category::col_banner => $value['banner']
+                Category::col_banner => $value['banner'],
+                Category::col_user_id => $value['user_id']
             ]);
 
             $this->command->info('Category => ' . $key . ' -- ADDED');
