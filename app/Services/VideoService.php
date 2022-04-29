@@ -10,7 +10,7 @@ use App\Http\Requests\Video\UploadVideoRequest;
 use App\Models\PlayList;
 use App\Models\Video;
 use FFMpeg\Filters\Video\CustomFilter;
-use FFMpeg\Format\Video\WMV;
+use FFMpeg\Format\Video\X264;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -85,26 +85,29 @@ class VideoService extends BaseService
 
             DB::beginTransaction();
 
-            //بدست اوردن زمان ویدیو به ثانیه توسط پکیج ffmpeg
-            $video = FFMpeg::fromDisk('videos')
-                ->open('/tmp/' . $request->video_id);
+            //tmp video path
+            $uploadedVideoPath = '/tmp/' . $request->video_id;
 
+            $video = FFMpeg::fromDisk('videos')
+                ->open($uploadedVideoPath);
+
+            //add water mark to video
             $filter = new CustomFilter("drawtext=text='goooogle':
              fontcolor=blue: fontsize=24:
               box=1: boxcolor=white@0.5:
                boxborderw=5:
                 x=10: y=(h - text_h - 10)");
 
+            //set mp3 as codeck
+            $format = new X264('libmp3lame');
 
-            $format = new WMV();
-            $video->addFilter($filter)
+            //apply filter and saving path to video
+            $videoFile = $video->addFilter($filter)
                 ->export()
                 ->toDisk(Storage::disk('videos'))
-                ->inFormat($format)
-                ->save('/tmp/export.wmv');
-            dd($video);
+                ->inFormat($format);
 
-            //ذخیره ویدوی
+            //save video data in db
             $video = Video::query()->create([
                 Video::col_title => $request->title,
                 Video::col_user_id => Auth::id(),
@@ -117,14 +120,18 @@ class VideoService extends BaseService
                 Video::col_banner => $video->getDurationInSeconds(),
                 Video::col_publish_at => $request->publish_at,
             ]);
-            //ایجاد اسلاگ یکتا از روی آی دی
+
+            //make unique slug for video and its banner
             $video->slug = uniqueId($video->id) . '.mp4';
             $video->banner = (Str::before($video->slug, '.mp4')) . '-Banner.jpg';
             $video->save();
 
-            //ذخیره فایل ویدیو
-            Storage::disk('videos')->move('/tmp/' . $request->video_id, Auth::id() . '/' . $video->slug);
 
+            //save video in storage
+
+            $videoFile->save(Auth::id() . '/' .$video->slug);
+            //delete tmp video from tmp
+            Storage::disk('videos')->delete($uploadedVideoPath);
             //ذخیره بنر ویدیو
             if ($request->banner) {
                 Storage::disk('videos')->move('/tmp/' . $request->banner, Auth::id() . '/' . $video->banner);
