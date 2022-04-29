@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\PlayListController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
@@ -125,6 +126,19 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/category'], function () 
         ->name('category.upload.banner');
 });
 
+
+/**
+ * Roue For PlayLists
+ */
+Route::group(['middleware' => 'auth:api', 'prefix' => '/playlist'], function () {
+
+    Route::get('/', [PlayListController::class, 'getAllPlayList'])
+        ->name('playlist.get.all');
+
+    Route::get('/my', [PlayListController::class, 'getMyPlaylist'])
+        ->name('playlist.get.my');
+
+});
 
 //------------- get grand and secret (for auth) ----
 Route::get('/passport', function () {

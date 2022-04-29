@@ -29,7 +29,7 @@ class CategoryService extends BaseService
      * دریافت کتگوری های کاربر لاگین کرده
      * @param ListCategoryRequest $request
      */
-    public static function getMyCategories(ListCategoryRequest $request)
+    public static function getMyCategories()
     {
         return Auth::user()->categories;
 

@@ -19,7 +19,8 @@ class CategoryController extends Controller
 
     public function getMyCategories()
     {
-        return Category::query()->where(Category::col_user_id ,Auth::id())->get();
+        return CategoryService::getMyCategories();
+
     }
 
     /**
