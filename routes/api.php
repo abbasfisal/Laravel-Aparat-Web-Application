@@ -128,7 +128,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/category'], function () 
 
 
 /**
- * Roue For PlayLists
+ * Routes For PlayLists
  */
 Route::group(['middleware' => 'auth:api', 'prefix' => '/playlist'], function () {
 
@@ -142,6 +142,17 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/playlist'], function () 
         ->name('playlist.create');
 
 });
+
+
+/*
+ * Routes For Tags
+ */
+Route::group(['middleware' => 'auth:api', 'prefix' => 'tag'], function () {
+
+    Route::get('/', [\App\Http\Controllers\TagController::class, 'getAllTag'])
+        ->name('tag.get.all');
+});
+
 
 //------------- get grand and secret (for auth) ----
 Route::get('/passport', function () {

@@ -88,7 +88,8 @@ class CategoryService extends BaseService
             }
 
             DB::commit();
-            return jr($cat, 200, 'data');
+            return response($cat);
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
