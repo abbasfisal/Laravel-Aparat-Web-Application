@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\PlayListController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
@@ -149,8 +150,11 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/playlist'], function () 
  */
 Route::group(['middleware' => 'auth:api', 'prefix' => 'tag'], function () {
 
-    Route::get('/', [\App\Http\Controllers\TagController::class, 'getAllTag'])
+    Route::get('/', [TagController::class, 'getAllTag'])
         ->name('tag.get.all');
+
+    Route::post('/create', [TagController::class, 'create'])
+        ->name('tag.create');
 });
 
 
