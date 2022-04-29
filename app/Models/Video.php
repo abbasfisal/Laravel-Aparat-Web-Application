@@ -21,7 +21,7 @@ class Video extends Model
     const col_duration = 'duration';
     const col_banner = 'banner';
     const col_publish_at = 'publish_at';
-
+    const col_enable_comments = 'enable_comments';
     protected $fillable = [
         self::col_user_id,
         self::col_category_id,
@@ -31,6 +31,7 @@ class Video extends Model
         self::col_info,
         self::col_duration,
         self::col_banner,
+        self::col_enable_comments,
         self::col_publish_at,
     ];
 

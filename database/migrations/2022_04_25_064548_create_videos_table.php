@@ -25,7 +25,7 @@ class CreateVideosTable extends Migration
                 ->cascadeOnUpdate();
 
             $table->foreignId('channel_category_id')
-                ->constrained('categories','id')
+                ->constrained('categories', 'id')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
@@ -34,6 +34,7 @@ class CreateVideosTable extends Migration
             $table->text('info')->nullable();
 
             $table->integer('duration');
+            $table->boolean('enable_comments')->default(true);
             $table->string('banner')->nullable();
 
             $table->timestamp('publish_at')->nullable();

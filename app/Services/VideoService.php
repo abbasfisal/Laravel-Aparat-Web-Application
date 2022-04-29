@@ -83,7 +83,7 @@ class VideoService extends BaseService
 
             DB::beginTransaction();
             //بدست اوردن زمان ویدیو به ثانیه توسط پکیج ffmpeg
-            $duration = FFMpeg::fromDisk('videos')->open('/tmp/'.$request->video_id)->getDurationInSeconds();
+            $duration = FFMpeg::fromDisk('videos')->open('/tmp/' . $request->video_id)->getDurationInSeconds();
             //ذخیره ویدوی
             $video = Video::query()->create([
                 Video::col_title => $request->title,
@@ -92,7 +92,8 @@ class VideoService extends BaseService
                 Video::col_channel_category_id => $request->channel_category,
                 Video::col_slug => '',
                 Video::col_info => $request->info,
-                Video::col_duration => 0, //TODO get video Time
+                Video::col_duration => 0,
+                Video::col_enable_comments => $request->enable_comments,
                 Video::col_banner => $duration,
                 Video::col_publish_at => $request->publish_at,
             ]);
