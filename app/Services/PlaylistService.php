@@ -26,4 +26,17 @@ class PlaylistService extends BaseService
     {
         return Auth::user()->playlists;
     }
+
+    /**
+     * create a playlist
+     * @param \App\Http\Requests\Playlist\CreatePlaylistRequest $request
+     */
+    public static function create(\App\Http\Requests\Playlist\CreatePlaylistRequest $request)
+    {
+        $playlist = Auth::user()->playlists()->create($request->toArray());
+
+        return jr($playlist, 200, 'data');
+
+
+    }
 }

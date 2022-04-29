@@ -138,6 +138,9 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/playlist'], function () 
     Route::get('/my', [PlayListController::class, 'getMyPlaylist'])
         ->name('playlist.get.my');
 
+    Route::post('/create', [PlayListController::class, 'create'])
+        ->name('playlist.create');
+
 });
 
 //------------- get grand and secret (for auth) ----
