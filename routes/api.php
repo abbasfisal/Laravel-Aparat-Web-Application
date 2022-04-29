@@ -106,17 +106,27 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/video'], function () {
 /**
  * Roue For Categories
  */
-Route::group(['middleware'=>'auth:api' , 'prefix'=>'/category'], function(){
+Route::group(['middleware' => 'auth:api', 'prefix' => '/category'], function () {
 
-    Route::get('/' , [CategoryController::class , 'getAllCategories'] )
+    //create cat for loged in user
+    Route::post('/', [CategoryController::class, 'create'])
+        ->name('category.create');
+
+    //get all cats
+    Route::get('/', [CategoryController::class, 'getAllCategories'])
         ->name('category.get.all');
 
-    Route::get('/my' , [CategoryController::class , 'getMyCategories'])
+    //get loged in user categories
+    Route::get('/my', [CategoryController::class, 'getMyCategories'])
         ->name('category.get.my');
+
+    //upload cat banner
+    Route::post('/upload-banner', [CategoryController::class, 'uploadBanner'])
+        ->name('category.upload.banner');
 });
 
 
 //------------- get grand and secret (for auth) ----
-Route::get('/passport' , function(){
-    return \Illuminate\Support\Facades\DB::table('oauth_clients')->where('id',2)->first();
+Route::get('/passport', function () {
+    return \Illuminate\Support\Facades\DB::table('oauth_clients')->where('id', 2)->first();
 });

@@ -5,7 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 
-class UploadedVideoBannerIdRule implements Rule
+class UploadedCategoryBannerIdRule implements Rule
 {
     /**
      * Create a new rule instance.
@@ -26,8 +26,9 @@ class UploadedVideoBannerIdRule implements Rule
      */
     public function passes($attribute, $value)
     {
+        return Storage::disk('categories')->exists('tmp/' . $value);
 
-        return Storage::disk('videos')->exists('/tmp/' . $value);
+
 
     }
 
@@ -38,6 +39,6 @@ class UploadedVideoBannerIdRule implements Rule
      */
     public function message()
     {
-        return 'Invalid Vide Banner Id.';
+        return 'Invalid Category Banner Id.';
     }
 }

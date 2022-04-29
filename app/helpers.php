@@ -31,9 +31,9 @@ if (!function_exists('jr')) {
     /**
      * create a json reponse
      */
-    function jr(string $message, int $code)
+    function jr( $message, int $code , $key='message')
     {
-        return response(['message' => $message], $code);
+        return response([$key => $message], $code);
     }
 }
 

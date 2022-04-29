@@ -1,7 +1,9 @@
 /node_modules
 /public/hot
 /public/storage
-/public/videos
+/public/videos/
+/public/Categories/
+/public/categories/*.key
 /public/*.key
 /storage/*.key
 /public/channel-banners
