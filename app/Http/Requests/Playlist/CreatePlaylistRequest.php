@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Playlist;
 
+use App\Rules\UniqueForUserRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreatePlaylistRequest extends FormRequest
@@ -24,7 +25,7 @@ class CreatePlaylistRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|min:4|max:100|unique:playlists,title'
+            'title' => ['required','string','min:4','max:100',new UniqueForUserRule('playlists')]
         ];
     }
 
