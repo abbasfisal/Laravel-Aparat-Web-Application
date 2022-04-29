@@ -128,15 +128,15 @@ class VideoService extends BaseService
 
 
             //save video in storage
+            $videoFile->save(Auth::id() . '/' . $video->slug);
 
-            $videoFile->save(Auth::id() . '/' .$video->slug);
             //delete tmp video from tmp
             Storage::disk('videos')->delete($uploadedVideoPath);
+
             //ذخیره بنر ویدیو
             if ($request->banner) {
                 Storage::disk('videos')->move('/tmp/' . $request->banner, Auth::id() . '/' . $video->banner);
             }
-
 
             //تخصیص ویدیو به لیست پخش
             if ($request->playlist) {
@@ -144,7 +144,6 @@ class VideoService extends BaseService
 
                 $playlist->videos()->attach($video->id);
             }
-
 
             //تخصیص تگ ها به ویدو
             if (!empty($request->tags)) {
