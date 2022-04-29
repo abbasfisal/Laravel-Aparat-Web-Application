@@ -9,6 +9,8 @@ use App\Http\Requests\Video\UploadVideoBannerRequest;
 use App\Http\Requests\Video\UploadVideoRequest;
 use App\Models\PlayList;
 use App\Models\Video;
+use FFMpeg\Filters\Video\CustomFilter;
+use FFMpeg\Format\Video\WMV;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -82,8 +84,26 @@ class VideoService extends BaseService
         try {
 
             DB::beginTransaction();
+
             //بدست اوردن زمان ویدیو به ثانیه توسط پکیج ffmpeg
-            $duration = FFMpeg::fromDisk('videos')->open('/tmp/' . $request->video_id)->getDurationInSeconds();
+            $video = FFMpeg::fromDisk('videos')
+                ->open('/tmp/' . $request->video_id);
+
+            $filter = new CustomFilter("drawtext=text='goooogle':
+             fontcolor=blue: fontsize=24:
+              box=1: boxcolor=white@0.5:
+               boxborderw=5:
+                x=10: y=(h - text_h - 10)");
+
+
+            $format = new WMV();
+            $video->addFilter($filter)
+                ->export()
+                ->toDisk(Storage::disk('videos'))
+                ->inFormat($format)
+                ->save('/tmp/export.wmv');
+            dd($video);
+
             //ذخیره ویدوی
             $video = Video::query()->create([
                 Video::col_title => $request->title,
@@ -94,7 +114,7 @@ class VideoService extends BaseService
                 Video::col_info => $request->info,
                 Video::col_duration => 0,
                 Video::col_enable_comments => $request->enable_comments,
-                Video::col_banner => $duration,
+                Video::col_banner => $video->getDurationInSeconds(),
                 Video::col_publish_at => $request->publish_at,
             ]);
             //ایجاد اسلاگ یکتا از روی آی دی
