@@ -8,16 +8,14 @@ use App\Events\UploadNewVideoEvent;
 use App\Http\Requests\Video\CreateVideoRequest;
 use App\Http\Requests\Video\UploadVideoBannerRequest;
 use App\Http\Requests\Video\UploadVideoRequest;
+use App\Jobs\ConvertAndAddWaterMarkToUploadedVideoJob;
 use App\Models\PlayList;
 use App\Models\Video;
-use FFMpeg\Filters\Video\CustomFilter;
-use FFMpeg\Format\Video\X264;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class VideoService extends BaseService
 {
@@ -104,17 +102,18 @@ class VideoService extends BaseService
             $video->banner = (Str::before($video->slug, '.mp4')) . '-Banner.jpg';
             $video->save();
 
+
             event(new UploadNewVideoEvent($video , $request));
 
 
-
             //حذف ویدیو از پیش موجود
-          //  Storage::disk('videos')->delete($uploadedVideoPath);
 
             //ذخیره بنر ویدیو
             if ($request->banner) {
                 Storage::disk('videos')->move('/tmp/' . $request->banner, Auth::id() . '/' . $video->banner);
             }
+
+
 
             //تخصیص ویدیو به لیست پخش
             if ($request->playlist) {
