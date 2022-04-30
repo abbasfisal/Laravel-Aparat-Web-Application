@@ -34,6 +34,7 @@ class CategoryIdRule implements Rule
     public function passes($attribute, $value)
     {
         if ($this->categoryType === 'public') {
+
             return Category::query()->where('id', $value)->whereNull('user_id')->count();
         }
 

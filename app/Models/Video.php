@@ -38,6 +38,13 @@ class Video extends Model
     const col_enable_comments = 'enable_comments';
     const col_state = 'state';
 
+    /*
+     |------------------------------
+     | Relations
+     |------------------------------
+     |
+     */
+
     protected $fillable = [
         self::col_user_id,
         self::col_category_id,
@@ -51,13 +58,6 @@ class Video extends Model
         self::col_publish_at,
         self::col_state
     ];
-
-    /*
-     |------------------------------
-     | Relations
-     |------------------------------
-     |
-     */
 
     public function playlists()
     {
