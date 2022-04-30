@@ -28,5 +28,12 @@ class DatabaseSeeder extends Seeder
         Artisan::call('passport:install');
 
         Schema::enableForeignKeyConstraints();
+
+        //region clear aparat temp dir
+        $this->command->info('Clearing All Aparat Direcotry ');
+        Artisan::call('aparat:clear');
+        $this->command->info('Cleared All Directories');
+        //endregion
+
     }
 }

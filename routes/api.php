@@ -8,6 +8,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Laravel\Passport\Http\Controllers\TransientTokenController;
 
@@ -78,7 +79,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'channel'], function () {
     Route::put('/{id?}', [ChannelController::class, 'update'])
         ->name('channel.update');
 
-    Route::match(['put', 'post'], '', [ChannelController::class, 'updloadBanner'])
+    Route::match(['put', 'post'], '/', [ChannelController::class, 'updloadBanner'])
         ->name('channel.upload.banner');
 
 
@@ -162,3 +163,4 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'tag'], function () {
 Route::get('/passport', function () {
     return \Illuminate\Support\Facades\DB::table('oauth_clients')->where('id', 2)->first();
 });
+

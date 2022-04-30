@@ -17,3 +17,16 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command("aparat:clear", function () {
+
+    $this->info("Cleared Videos Direcotry ");
+    removeDir('videos');
+
+    $this->info("Cleared Category Direcotry ");
+    removeDir('categories');
+
+    $this->info("Cleared Channels Direcotry ");
+    removeDir('channels');
+
+})->purpose('Clear All Aparat Temp Directory');

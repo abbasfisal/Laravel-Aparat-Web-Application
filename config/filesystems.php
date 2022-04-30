@@ -64,6 +64,14 @@ return [
             'root' => public_path('categories'),
         ],
 
+        'channels' => [
+            'driver' => 'local',
+            'root' => public_path('channels'),
+            'url' => env('app_url') . '/channels',
+
+        ],
+
+
     ],
 
     /*

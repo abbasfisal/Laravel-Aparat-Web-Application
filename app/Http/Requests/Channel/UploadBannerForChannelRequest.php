@@ -25,6 +25,7 @@ class UploadBannerForChannelRequest extends FormRequest
     public function rules()
     {
 
+
         return [
             'banner' => 'required|image|max:3072'
         ];

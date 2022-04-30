@@ -11,6 +11,7 @@ use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ChannelService extends BaseService
@@ -58,28 +59,35 @@ class ChannelService extends BaseService
     {
         try {
 
+            //get banner(image) uploaded
             $banner = $request->file('banner');
 
+            //set name for banner
             $fileName = Auth::id() . '-' . Str::random(15) . '.' . $banner->extension();
 
+            //get table channels
             $channel = \auth()->user()->channels;
 
-
+            //delete banner(image) if exist
             if ($channel->banner) {
-                unlink(public_path($channel->banner));
+                Storage::disk('channels')->delete(uniqueId(Auth::id()) . '/' . $channel->banner);
             }
 
-
-            $channel->banner = 'channel-banners/' . $fileName;
+            //save banner name to db
+            $channel->banner = $fileName;
             $channel->save();
 
-            $banner->move(public_path('channel-banners'), $fileName);
+            //save banner(image) to disk
+            Storage::disk('channels')->put(uniqueId(Auth::id()) . '/' . $fileName, $banner->getContent());
 
             return response([
-                'banner' => url('channel-banners/' . $fileName)], 200);
+                'banner' => Storage::disk('channels')->url(uniqueId(Auth::id()) . '/' . $fileName)
+            ], 200);
 
 
         } catch (\Exception $e) {
+
+            Log::error($e);
             return jr('error in upload image', 500);
         }
     }
@@ -106,8 +114,8 @@ class ChannelService extends BaseService
             return jr('successfully socials updated', 200);
 
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
 
+            Log::error($e->getMessage());
             return jr('error occured (socials operations)', 500);
         }
 
