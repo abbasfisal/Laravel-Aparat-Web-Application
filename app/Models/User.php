@@ -112,4 +112,15 @@ class User extends Authenticatable
         $this->attributes[self::col_mobile] = to_valid_mobile_number($value);
 
     }
+
+
+    public function isAdmin()
+    {
+        return $this->type === User::ADMIN_TYPE;
+    }
+
+    public function isBaseUser()
+    {
+        return $this->type === User::USER_TYPE;
+    }
 }
