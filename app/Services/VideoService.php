@@ -5,10 +5,10 @@ namespace App\Services;
 
 
 use App\Events\UploadNewVideoEvent;
+use App\Http\Requests\Video\ChangeStateVideoRequest;
 use App\Http\Requests\Video\CreateVideoRequest;
 use App\Http\Requests\Video\UploadVideoBannerRequest;
 use App\Http\Requests\Video\UploadVideoRequest;
-use App\Jobs\ConvertAndAddWaterMarkToUploadedVideoJob;
 use App\Models\PlayList;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
@@ -73,6 +73,17 @@ class VideoService extends BaseService
 
     }
 
+    public static function changeState(ChangeStateVideoRequest $request)
+    {
+
+
+        $video = $request->video;
+
+        $video->state = $request->state;
+        $video->save();
+        return $video;
+    }
+
     /**
      * ایجاد یک ویدیو به همراه انتقال ویدیو و بنر مربوطه از پوشه تمپ به پوشه اصلی
      * @param CreateVideoRequest $request
@@ -103,7 +114,7 @@ class VideoService extends BaseService
             $video->save();
 
 
-            event(new UploadNewVideoEvent($video , $request));
+            event(new UploadNewVideoEvent($video, $request));
 
 
             //حذف ویدیو از پیش موجود
@@ -112,7 +123,6 @@ class VideoService extends BaseService
             if ($request->banner) {
                 Storage::disk('videos')->move('/tmp/' . $request->banner, Auth::id() . '/' . $video->banner);
             }
-
 
 
             //تخصیص ویدیو به لیست پخش

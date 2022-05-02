@@ -8,7 +8,6 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Laravel\Passport\Http\Controllers\TransientTokenController;
 
@@ -106,6 +105,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/video'], function () {
     Route::post('/', [VideoController::class, 'create'])
         ->name('video.create');
 
+    Route::put('/{video}/state', [VideoController::class, 'changeState'])
+        ->name('video.change.state');
 
 });
 

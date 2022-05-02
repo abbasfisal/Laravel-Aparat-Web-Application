@@ -69,4 +69,12 @@ class Video extends Model
         return $this->belongsToMany(Tag::class, 'tag_videos');
     }
 
+
+    //-------------
+
+    public function getRouteKeyName()
+    {
+
+        return Video::col_slug;
+    }
 }

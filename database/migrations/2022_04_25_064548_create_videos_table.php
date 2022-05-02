@@ -30,7 +30,7 @@ class CreateVideosTable extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->string('slug');
+            $table->string('slug')->collation('ascii_bin');
             $table->string('title');
             $table->text('info')->nullable();
 
