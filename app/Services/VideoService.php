@@ -8,10 +8,12 @@ use App\Events\UploadNewVideoEvent;
 use App\Http\Requests\Video\ChangeStateVideoRequest;
 use App\Http\Requests\Video\CreateVideoRequest;
 use App\Http\Requests\Video\ListVideoRequest;
+use App\Http\Requests\Video\RepublishVideoRequest;
 use App\Http\Requests\Video\UploadVideoBannerRequest;
 use App\Http\Requests\Video\UploadVideoRequest;
 use App\Models\PlayList;
 use App\Models\Video;
+use App\Models\VideoRepublishes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -149,7 +151,6 @@ class VideoService extends BaseService
 
     }
 
-
     /**
      * get loged in user video list
      * @param ListVideoRequest $request
@@ -161,6 +162,31 @@ class VideoService extends BaseService
         $video = $user->videos()->paginate(2);
 
         return $video;
+    }
+
+    /**
+     * Republish a video
+     * @param RepublishVideoRequest $request
+     */
+    public static function republish(RepublishVideoRequest $request)
+    {
+        try {
+            //create
+             VideoRepublishes::query()
+                ->create([
+                    VideoRepublishes::col_user_id => Auth::id(),
+                    VideoRepublishes::col_video_id => $request->video->id
+                ]);
+
+            return jr('Republishe was created successfully', 200);
+
+        } catch (\Exception $e) {
+
+            Log::error($e);
+            return jr('Republish was faild', 500);
+        }
+
+
     }
 
 

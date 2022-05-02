@@ -91,6 +91,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Video::class);
     }
+
+    public function republishedVideos()
+    {
+        return $this->hasManyThrough(
+            Video::class ,
+            VideoRepublishes::class,
+            'user_id',
+            'id',
+            'id',
+            'video_id'
+
+        );
+        //return $this->hasMany(Video::class)->using(RepublishVideo::class);
+    }
     //-------------------------Methods
 
     /**

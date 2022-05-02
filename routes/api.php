@@ -113,6 +113,9 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/video'], function () {
     Route::get('/list', [VideoController::class, 'list'])
         ->name('video.list');
 
+    Route::post('/{video}/republish', [VideoController::class, 'republish'])
+        ->name('video.republish');
+
 });
 
 /**
