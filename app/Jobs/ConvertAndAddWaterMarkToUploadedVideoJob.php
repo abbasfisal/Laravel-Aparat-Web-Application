@@ -29,16 +29,22 @@ class ConvertAndAddWaterMarkToUploadedVideoJob implements ShouldQueue
     private $videoId;
 
     private $userId;
+    /**
+     * @var bool
+     */
+    private $addWaterMark;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Video $video, string $videoId)
+    public function __construct(Video $video, string $videoId, bool $addWaterMark)
     {
         $this->video = $video;
         $this->videoId = $videoId;
+        $this->addWaterMark = $addWaterMark;
+
         $this->userId = Auth::id();
     }
 
@@ -61,16 +67,24 @@ class ConvertAndAddWaterMarkToUploadedVideoJob implements ShouldQueue
         //تنظیم کدک
         $format = new X264('libmp3lame');
 
-        //تنظیمات واترماک
-        $filter = new CustomFilter("drawtext=text='goooogle':
+
+
+        // water mark check
+        if ($this->addWaterMark) {
+
+            //تنظیمات واترماک
+            $filter = new CustomFilter("drawtext=text='goooogle':
              fontcolor=blue: fontsize=24:
               box=1: boxcolor=white@0.5:
                boxborderw=5:
                 x=10: y=(h - text_h - 10)");
 
+            //اعمال واترمارک به ویدیو
+            $videoUploaded = $videoUploaded->addFilter($filter);
 
-        //اعمال واترمارک به ویدیو
-        $videoFile = $videoUploaded->addFilter($filter)
+        }
+
+        $videoFile = $videoUploaded
             ->export()
             ->toDisk(Storage::disk('videos'))
             ->inFormat($format);
