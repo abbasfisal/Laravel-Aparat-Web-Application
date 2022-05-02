@@ -38,13 +38,6 @@ class Video extends Model
     const col_enable_comments = 'enable_comments';
     const col_state = 'state';
 
-    /*
-     |------------------------------
-     | Relations
-     |------------------------------
-     |
-     */
-
     protected $fillable = [
         self::col_user_id,
         self::col_category_id,
@@ -59,6 +52,14 @@ class Video extends Model
         self::col_state
     ];
 
+
+    /*
+     |------------------------------
+     | Relations
+     |------------------------------
+     |
+     */
+
     public function playlists()
     {
         return $this->belongsToMany(PlayList::class, 'playlist_videos')->first();
@@ -69,6 +70,10 @@ class Video extends Model
         return $this->belongsToMany(Tag::class, 'tag_videos');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     //-------------
 

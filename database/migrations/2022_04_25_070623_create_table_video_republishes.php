@@ -21,7 +21,7 @@ class CreateTableVideoRepublishes extends Migration
                 ->cascadeOnUpdate();
 
 
-            $table->foreignId('video')->constrained('videos')
+            $table->foreignId('video_id')->constrained('videos')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 

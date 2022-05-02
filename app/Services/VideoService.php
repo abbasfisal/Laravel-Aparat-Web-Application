@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Events\UploadNewVideoEvent;
 use App\Http\Requests\Video\ChangeStateVideoRequest;
 use App\Http\Requests\Video\CreateVideoRequest;
+use App\Http\Requests\Video\ListVideoRequest;
 use App\Http\Requests\Video\UploadVideoBannerRequest;
 use App\Http\Requests\Video\UploadVideoRequest;
 use App\Models\PlayList;
@@ -147,4 +148,20 @@ class VideoService extends BaseService
         }
 
     }
+
+
+    /**
+     * get loged in user video list
+     * @param ListVideoRequest $request
+     */
+    public static function list(ListVideoRequest $request)
+    {
+        $user = Auth::user();
+
+        $video = $user->videos()->paginate(2);
+
+        return $video;
+    }
+
+
 }
