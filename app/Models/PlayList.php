@@ -11,6 +11,9 @@ class PlayList extends Model
 
     protected $table = 'playlists';
 
+
+    protected $withCount = ['videos'];
+
     const col_id = 'id';
     const col_user_id = 'user_id';
     const col_title = 'title';
@@ -37,4 +40,7 @@ class PlayList extends Model
     {
         return $this->belongsToMany(Video::class, 'playlist_videos');
     }
+
+    //----------
+   
 }

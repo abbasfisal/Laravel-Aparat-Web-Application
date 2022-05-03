@@ -158,12 +158,20 @@ class VideoService extends BaseService
     public static function list(ListVideoRequest $request)
     {
         $user = Auth::user();
-        return $user->videos()->paginate(3)   ;
-        //$video = $user->videos;
 
-        return $user->with(['republishedVideos', 'channelVideos'])->where('id', 2)->get();
+        if ($request->has('republished')) {
 
-        return $video;
+            $videos = $request->republished ? $user->republishedVideos() : $user->channelVideos();
+
+        } else {
+
+            $videos = $user->videos();
+        }
+
+        return $videos
+            ->orderBy('id' ,'desc')
+            ->paginate(3);
+
     }
 
     /**
