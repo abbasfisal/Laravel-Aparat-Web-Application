@@ -38,8 +38,9 @@ class VideoPolicy
                 $video->user_id != $user->id &&
 
                 VideoRepublishes::query()
-                    //ویدیو قبلا توسط من بازنشر نشده باشد
-                    ->where([VideoRepublishes::col_video_id => $video->id,
+                    //ویدیو قبلا توسط کاربر جاری بازنشر نشده باشد
+                    ->where([
+                        VideoRepublishes::col_video_id => $video->id,
                         VideoRepublishes::col_user_id => $user->id
                     ])
                     ->count() < 1

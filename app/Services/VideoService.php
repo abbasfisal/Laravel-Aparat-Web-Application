@@ -158,8 +158,10 @@ class VideoService extends BaseService
     public static function list(ListVideoRequest $request)
     {
         $user = Auth::user();
+        return $user->videos()->paginate(3)   ;
+        //$video = $user->videos;
 
-        $video = $user->videos()->paginate(2);
+        return $user->with(['republishedVideos', 'channelVideos'])->where('id', 2)->get();
 
         return $video;
     }
@@ -172,7 +174,7 @@ class VideoService extends BaseService
     {
         try {
             //create
-             VideoRepublishes::query()
+            VideoRepublishes::query()
                 ->create([
                     VideoRepublishes::col_user_id => Auth::id(),
                     VideoRepublishes::col_video_id => $request->video->id

@@ -11,6 +11,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    //protected $with = ['republishedVideos', 'channelVideos'];
     protected $table = 'users';
 
     const ADMIN_TYPE = 'admin';
@@ -87,7 +88,7 @@ class User extends Authenticatable
         return $this->hasMany(Category::class);
     }
 
-    public function videos()
+    public function channelVideos()
     {
         return $this->hasMany(Video::class);
     }
@@ -95,7 +96,7 @@ class User extends Authenticatable
     public function republishedVideos()
     {
         return $this->hasManyThrough(
-            Video::class ,
+            Video::class,
             VideoRepublishes::class,
             'user_id',
             'id',
@@ -103,8 +104,18 @@ class User extends Authenticatable
             'video_id'
 
         );
-        //return $this->hasMany(Video::class)->using(RepublishVideo::class);
     }
+
+    public function videos()
+    {
+        return
+            $this->channelVideos()
+                ->selectRaw('* , 0 as republished')
+                ->union(
+                    $this->republishedVideos()->selectRaw('videos.* ,1 as republished ')
+                );
+    }
+
     //-------------------------Methods
 
     /**

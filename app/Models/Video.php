@@ -77,9 +77,9 @@ class Video extends Model
 
     //-------------
 
+
     public function getRouteKeyName()
     {
-
         return Video::col_slug;
     }
 }
