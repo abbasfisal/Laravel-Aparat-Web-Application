@@ -8,7 +8,6 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use App\Models\Video;
-use App\Models\VideoRepublishes;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Laravel\Passport\Http\Controllers\TransientTokenController;
@@ -115,13 +114,18 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/video'], function () {
     Route::post('/{video}/republish', [VideoController::class, 'republish'])
         ->name('video.republish');
 
+    Route::get('/liked', [VideoController::class, 'likedByCurrentUser'])
+        ->name('video.liked');
+
     //get video list
     Route::get('/list', [VideoController::class, 'list'])
-        ->name('video.list')->withoutMiddleware('auth:api');
+        ->name('video.list')
+        ->withoutMiddleware('auth:api');
 
     //like or unlike  a video by login or guest user
     Route::post('/{video}/like', [VideoController::class, 'like'])
-        ->name('video.like')->withoutMiddleware('auth:api');
+        ->name('video.like')
+        ->withoutMiddleware('auth:api');
 });
 
 /**

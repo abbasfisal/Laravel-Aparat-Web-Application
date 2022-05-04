@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Events\UploadNewVideoEvent;
 use App\Http\Requests\Video\ChangeStateVideoRequest;
 use App\Http\Requests\Video\CreateVideoRequest;
+use App\Http\Requests\Video\LikeedByCurrentUserRequest;
 use App\Http\Requests\Video\LikeVideoRequest;
 use App\Http\Requests\Video\ListVideoRequest;
 use App\Http\Requests\Video\RepublishVideoRequest;
@@ -90,6 +91,15 @@ class VideoService extends BaseService
         return $video;
     }
 
+    /**
+     * get liked video by loggedIn User
+     * @param LikeedByCurrentUserRequest $request
+     */
+    public static function likedByCurrentUser(LikeedByCurrentUserRequest $request)
+    {
+        $user = Auth::user();
+        return $user->favVideos()->paginate(3);
+    }
 
 
     /**
@@ -248,7 +258,7 @@ class VideoService extends BaseService
 
         return array($user, $video, $like);
     }
-    
+
 
     /**
      * Like/Unlike a video By LogedIn User
@@ -312,7 +322,6 @@ class VideoService extends BaseService
         }
         return $result;
     }
-
 
 
 }
