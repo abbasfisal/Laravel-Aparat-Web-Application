@@ -32,9 +32,9 @@ class VideoPolicy
      */
     public function republish(User $user, Video $video)
     {
-        return $video && (
+        return $video && $video->isAccepted() &&(
 
-                //ویدویو برای من نباشه
+            //ویدویو برای من نباشه
                 $video->user_id != $user->id &&
 
                 VideoRepublishes::query()
@@ -45,5 +45,11 @@ class VideoPolicy
                     ])
                     ->count() < 1
             );
+    }
+
+
+    public function like(User $user = null, Video $video)
+    {
+        return $video && $video->isAccepted();
     }
 }

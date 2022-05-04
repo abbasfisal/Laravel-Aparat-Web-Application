@@ -7,12 +7,14 @@ namespace App\Services;
 use App\Events\UploadNewVideoEvent;
 use App\Http\Requests\Video\ChangeStateVideoRequest;
 use App\Http\Requests\Video\CreateVideoRequest;
+use App\Http\Requests\Video\LikeVideoRequest;
 use App\Http\Requests\Video\ListVideoRequest;
 use App\Http\Requests\Video\RepublishVideoRequest;
 use App\Http\Requests\Video\UploadVideoBannerRequest;
 use App\Http\Requests\Video\UploadVideoRequest;
 use App\Models\PlayList;
 use App\Models\Video;
+use App\Models\VideoFavorite;
 use App\Models\VideoRepublishes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -157,19 +159,26 @@ class VideoService extends BaseService
      */
     public static function list(ListVideoRequest $request)
     {
-        $user = Auth::user();
+
+        $user = Auth::guard('api')->user();
 
         if ($request->has('republished')) {
 
-            $videos = $request->republished ? $user->republishedVideos() : $user->channelVideos();
+            if ($user) {
+                $videos = $request->republished ? $user->republishedVideos() : $user->channelVideos();
+            } else {
+                $videos = $request->republished ? Video::whereRepublished() : Video::whereNotRepublished();
+            }
 
         } else {
+            //تمام ویدیو ها رو میخواییم(channelVideo , RepublishedVideos)
 
-            $videos = $user->videos();
+            $videos = $user ? $user->videos() : Video::query();
+
         }
 
         return $videos
-            ->orderBy('id' ,'desc')
+            ->orderBy('id', 'desc')
             ->paginate(3);
 
     }
@@ -196,6 +205,71 @@ class VideoService extends BaseService
             return jr('Republish was faild', 500);
         }
 
+
+    }
+
+
+    /**
+     * Like Or Unlike a video
+     *
+     * @param LikeVideoRequest $request
+     */
+    public static function like(LikeVideoRequest $request)
+    {
+        $user = Auth::guard('api')->user();
+        $video = $request->video;
+        $like = $request->like;
+
+        //یزور لاگین کرده است
+        if ($user) {
+            $fav = $user->favVideos()->where(['video_id' => $video->id])->first();
+            if ($like) {
+                $result = $fav ? false :
+                    //create kon
+                    VideoFavorite::query()->create([
+                        VideoFavorite::col_video_id => $video->id,
+                        VideoFavorite::col_user_id => $user->id,
+                        VideoFavorite::col_user_ip => null
+                    ]);
+
+            } else {
+                $result = $fav ?
+                    VideoFavorite::query()->where([
+                        VideoFavorite::col_video_id => $video->id,
+                        VideoFavorite::col_user_id => $user->id,
+                        VideoFavorite::col_user_ip => null
+                    ])->delete() : false;
+            }
+            //یوزر مهمان است
+        } else {
+
+            $fav = VideoFavorite::query()->where([
+                VideoFavorite::col_video_id => $video->id,
+                VideoFavorite::col_user_id => null,
+                VideoFavorite::col_user_ip => client_ip()
+            ])->first();
+
+            if ($like) {
+                //save
+                $result = $fav ? false :
+                    VideoFavorite::query()->create([
+                        VideoFavorite::col_video_id => $video->id,
+                        VideoFavorite::col_user_id => null,
+                        VideoFavorite::col_user_ip => client_ip()
+                    ]);
+            } else {
+                $result = $fav ?
+                    VideoFavorite::query()->where([
+                        VideoFavorite::col_video_id => $video->id,
+                        VideoFavorite::col_user_id => null,
+                        VideoFavorite::col_user_ip => client_ip()
+                    ])->delete() : false;
+            }
+        }
+
+        return $result ?
+            jr('با موفقیت ثبت شد') :
+            jr('شما قادر به انجام عملیات نیستید');
 
     }
 

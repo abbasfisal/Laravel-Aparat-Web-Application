@@ -7,6 +7,8 @@ use App\Http\Controllers\PlayListController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
+use App\Models\Video;
+use App\Models\VideoRepublishes;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Laravel\Passport\Http\Controllers\TransientTokenController;
@@ -110,12 +112,16 @@ Route::group(['middleware' => 'auth:api', 'prefix' => '/video'], function () {
         ->name('video.change.state');
 
 
-    Route::get('/list', [VideoController::class, 'list'])
-        ->name('video.list');
-
     Route::post('/{video}/republish', [VideoController::class, 'republish'])
         ->name('video.republish');
 
+    //get video list
+    Route::get('/list', [VideoController::class, 'list'])
+        ->name('video.list')->withoutMiddleware('auth:api');
+
+    //like or unlike  a video by login or guest user
+    Route::post('/{video}/like', [VideoController::class, 'like'])
+        ->name('video.like')->withoutMiddleware('auth:api');
 });
 
 /**
@@ -176,3 +182,13 @@ Route::get('/passport', function () {
     return \Illuminate\Support\Facades\DB::table('oauth_clients')->where('id', 2)->first();
 });
 
+
+Route::get('/ss', function () {
+
+    /*return Video::query()->whereNotIn('id',
+        VideoRepublishes::query()->pluck('video_id')->toArray()
+    )->get();*/
+
+    return Video::query()->whereRaw('id not in (select video_id from video_republishes)')->get()->toArray();
+
+});

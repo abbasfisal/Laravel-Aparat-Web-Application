@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Video extends Model
 {
@@ -81,5 +82,69 @@ class Video extends Model
     public function getRouteKeyName()
     {
         return Video::col_slug;
+    }
+
+    //----------- methods
+
+    public function isInState($state)
+    {
+        return $this->state === $state;
+    }
+
+    public function isAccepted()
+    {
+        return $this->isInState(self::state_accepted);
+    }
+
+    public function isPending()
+    {
+        return $this->isInState(self::state_pending);
+    }
+
+    public function isConverted()
+    {
+        return $this->isInState(self::state_converted);
+    }
+
+    public function isBlocked()
+    {
+        return $this->isInState(self::state_bloacked);
+    }
+
+    public function toArray()
+    {
+        $data = parent::toArray();
+
+        $condition = [
+            VideoFavorite::col_video_id => $this->id,
+            VideoFavorite::col_user_id => Auth::guard('api')->check() ? Auth::guard('api')->id() : null,
+        ];
+
+
+        //اگر کسی لاگین نبود
+        if (!Auth::guard('api')->check()) {
+            $condition[VideoFavorite::col_user_ip] = client_ip();
+        }
+
+        $data['like'] = VideoFavorite::query()->where($condition)->count();
+
+        return $data;
+    }
+
+
+    /*
+     |------------------------------
+     | Scopes
+     |------------------------------
+     |
+     */
+    public static function WhereNotRepublished()
+    {
+        return static::query()->whereRaw('id not in  ( select video_id from video_republishes ) ');
+    }
+
+    public static function WhereRepublished()
+    {
+        return static::query()->whereRaw('id in ( select video_id from video_republishes ) ');
     }
 }

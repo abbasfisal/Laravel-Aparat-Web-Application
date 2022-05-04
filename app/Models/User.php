@@ -67,7 +67,7 @@ class User extends Authenticatable
 
     /*
      |--------------------------------------------------------------------------
-     | User Relations
+     |  Relations
      |--------------------------------------------------------------------------
      |
      |
@@ -93,8 +93,14 @@ class User extends Authenticatable
         return $this->hasMany(Video::class);
     }
 
+    /**
+     * get republished videos
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function republishedVideos()
     {
+        // its a has many through relation
         return $this->hasManyThrough(
             Video::class,
             VideoRepublishes::class,
@@ -106,6 +112,11 @@ class User extends Authenticatable
         );
     }
 
+    /**
+     * get union videos (user videos and republished vides)
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function videos()
     {
         return
@@ -114,6 +125,23 @@ class User extends Authenticatable
                 ->union(
                     $this->republishedVideos()->selectRaw('videos.* ,1 as republished ')
                 );
+    }
+
+
+    /**
+     *
+     */
+    public function favVideos()
+    {
+        return $this->hasManyThrough(
+            Video::class,
+            VideoFavorite::class,
+            'user_id',
+            'id',
+            'id',
+            'video_id'
+        );
+
     }
 
     //-------------------------Methods
@@ -153,4 +181,8 @@ class User extends Authenticatable
     {
         return $this->type === User::USER_TYPE;
     }
+
+
+    //------------
+
 }
