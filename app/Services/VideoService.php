@@ -16,6 +16,7 @@ use App\Models\PlayList;
 use App\Models\Video;
 use App\Models\VideoFavorite;
 use App\Models\VideoRepublishes;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -88,6 +89,8 @@ class VideoService extends BaseService
         $video->save();
         return $video;
     }
+
+
 
     /**
      * ایجاد یک ویدیو به همراه انتقال ویدیو و بنر مربوطه از پوشه تمپ به پوشه اصلی
@@ -216,55 +219,15 @@ class VideoService extends BaseService
      */
     public static function like(LikeVideoRequest $request)
     {
-        $user = Auth::guard('api')->user();
-        $video = $request->video;
-        $like = $request->like;
+        list($user, $video, $like) = self::LikeVars($request);
 
         //یزور لاگین کرده است
         if ($user) {
-            $fav = $user->favVideos()->where(['video_id' => $video->id])->first();
-            if ($like) {
-                $result = $fav ? false :
-                    //create kon
-                    VideoFavorite::query()->create([
-                        VideoFavorite::col_video_id => $video->id,
-                        VideoFavorite::col_user_id => $user->id,
-                        VideoFavorite::col_user_ip => null
-                    ]);
-
-            } else {
-                $result = $fav ?
-                    VideoFavorite::query()->where([
-                        VideoFavorite::col_video_id => $video->id,
-                        VideoFavorite::col_user_id => $user->id,
-                        VideoFavorite::col_user_ip => null
-                    ])->delete() : false;
-            }
+            $result = self::UserLikeUnlike($user, $video, $like);
             //یوزر مهمان است
         } else {
 
-            $fav = VideoFavorite::query()->where([
-                VideoFavorite::col_video_id => $video->id,
-                VideoFavorite::col_user_id => null,
-                VideoFavorite::col_user_ip => client_ip()
-            ])->first();
-
-            if ($like) {
-                //save
-                $result = $fav ? false :
-                    VideoFavorite::query()->create([
-                        VideoFavorite::col_video_id => $video->id,
-                        VideoFavorite::col_user_id => null,
-                        VideoFavorite::col_user_ip => client_ip()
-                    ]);
-            } else {
-                $result = $fav ?
-                    VideoFavorite::query()->where([
-                        VideoFavorite::col_video_id => $video->id,
-                        VideoFavorite::col_user_id => null,
-                        VideoFavorite::col_user_ip => client_ip()
-                    ])->delete() : false;
-            }
+            $result = self::GuestLikeUnlike($video, $like);
         }
 
         return $result ?
@@ -272,6 +235,84 @@ class VideoService extends BaseService
             jr('شما قادر به انجام عملیات نیستید');
 
     }
+
+    /**
+     * @param LikeVideoRequest $request
+     * @return array
+     */
+    private static function LikeVars(LikeVideoRequest $request): array
+    {
+        $user = Auth::guard('api')->user();
+        $video = $request->video;
+        $like = $request->like;
+
+        return array($user, $video, $like);
+    }
+    
+
+    /**
+     * Like/Unlike a video By LogedIn User
+     * @param Authenticatable $user
+     * @param $video
+     * @param $like
+     * @return false|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|mixed
+     */
+    private static function UserLikeUnlike(Authenticatable $user, $video, $like)
+    {
+        $fav = $user->favVideos()->where(['video_id' => $video->id])->first();
+        if ($like) {
+            $result = $fav ? false :
+                //create kon
+                VideoFavorite::query()->create([
+                    VideoFavorite::col_video_id => $video->id,
+                    VideoFavorite::col_user_id => $user->id,
+                    VideoFavorite::col_user_ip => null
+                ]);
+
+        } else {
+            $result = $fav ?
+                VideoFavorite::query()->where([
+                    VideoFavorite::col_video_id => $video->id,
+                    VideoFavorite::col_user_id => $user->id,
+                    VideoFavorite::col_user_ip => null
+                ])->delete() : false;
+        }
+        return $result;
+    }
+
+    /**
+     * Like/Unlike a video By a Guest User
+     * @param $video
+     * @param $like
+     * @return false|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|mixed
+     */
+    private static function GuestLikeUnlike($video, $like)
+    {
+        $fav = VideoFavorite::query()->where([
+            VideoFavorite::col_video_id => $video->id,
+            VideoFavorite::col_user_id => null,
+            VideoFavorite::col_user_ip => client_ip()
+        ])->first();
+
+        if ($like) {
+            //save
+            $result = $fav ? false :
+                VideoFavorite::query()->create([
+                    VideoFavorite::col_video_id => $video->id,
+                    VideoFavorite::col_user_id => null,
+                    VideoFavorite::col_user_ip => client_ip()
+                ]);
+        } else {
+            $result = $fav ?
+                VideoFavorite::query()->where([
+                    VideoFavorite::col_video_id => $video->id,
+                    VideoFavorite::col_user_id => null,
+                    VideoFavorite::col_user_ip => client_ip()
+                ])->delete() : false;
+        }
+        return $result;
+    }
+
 
 
 }
