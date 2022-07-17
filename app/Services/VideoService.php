@@ -98,7 +98,8 @@ class VideoService extends BaseService
     public static function likedByCurrentUser(LikeedByCurrentUserRequest $request)
     {
         $user = Auth::user();
-        return $user->favVideos()->paginate(3);
+        return $user->favVideos()
+                    ->paginate(3);
     }
 
 
@@ -112,19 +113,20 @@ class VideoService extends BaseService
         try {
             //save video data in db
             DB::beginTransaction();
-            $video = Video::query()->create([
-                Video::col_title => $request->title,
-                Video::col_user_id => Auth::id(),
-                Video::col_category_id => $request->category,
-                Video::col_channel_category_id => $request->channel_category,
-                Video::col_slug => '',
-                Video::col_info => $request->info,
-                Video::col_duration => 0,
-                Video::col_enable_comments => $request->enable_comments,
-                Video::col_banner => 0,
-                Video::col_publish_at => $request->publish_at,
-                Video::col_state => Video::state_pending
-            ]);
+            $video = Video::query()
+                          ->create([
+                              Video::col_title               => $request->title,
+                              Video::col_user_id             => Auth::id(),
+                              Video::col_category_id         => $request->category,
+                              Video::col_channel_category_id => $request->channel_category,
+                              Video::col_slug                => '',
+                              Video::col_info                => $request->info,
+                              Video::col_duration            => 0,
+                              Video::col_enable_comments     => $request->enable_comments,
+                              Video::col_banner              => 0,
+                              Video::col_publish_at          => $request->publish_at,
+                              Video::col_state               => Video::state_pending
+                          ]);
 
             //ساخت اسلاگ به صورت یونیک
             $video->slug = uniqueId($video->id) . '.mp4';
@@ -139,7 +141,8 @@ class VideoService extends BaseService
 
             //ذخیره بنر ویدیو
             if ($request->banner) {
-                Storage::disk('videos')->move('/tmp/' . $request->banner, Auth::id() . '/' . $video->banner);
+                Storage::disk('videos')
+                       ->move('/tmp/' . $request->banner, Auth::id() . '/' . $video->banner);
             }
 
 
@@ -147,13 +150,15 @@ class VideoService extends BaseService
             if ($request->playlist) {
                 $playlist = PlayList::find($request->playlist);
 
-                $playlist->videos()->attach($video->id);
+                $playlist->videos()
+                         ->attach($video->id);
             }
 
             //تخصیص تگ ها به ویدو
             if (!empty($request->tags)) {
 
-                $video->tags()->attach($request->tags);
+                $video->tags()
+                      ->attach($request->tags);
             }
             DB::commit();
 
@@ -173,7 +178,8 @@ class VideoService extends BaseService
     public static function list(ListVideoRequest $request)
     {
 
-        $user = Auth::guard('api')->user();
+        $user = Auth::guard('api')
+                    ->user();
 
         if ($request->has('republished')) {
 
@@ -205,10 +211,10 @@ class VideoService extends BaseService
         try {
             //create
             VideoRepublishes::query()
-                ->create([
-                    VideoRepublishes::col_user_id => Auth::id(),
-                    VideoRepublishes::col_video_id => $request->video->id
-                ]);
+                            ->create([
+                                VideoRepublishes::col_user_id  => Auth::id(),
+                                VideoRepublishes::col_video_id => $request->video->id
+                            ]);
 
             return jr('Republishe was created successfully', 200);
 
@@ -252,7 +258,8 @@ class VideoService extends BaseService
      */
     private static function LikeVars(LikeVideoRequest $request): array
     {
-        $user = Auth::guard('api')->user();
+        $user = Auth::guard('api')
+                    ->user();
         $video = $request->video;
         $like = $request->like;
 
@@ -269,23 +276,28 @@ class VideoService extends BaseService
      */
     private static function UserLikeUnlike(Authenticatable $user, $video, $like)
     {
-        $fav = $user->favVideos()->where(['video_id' => $video->id])->first();
+        $fav = $user->favVideos()
+                    ->where(['video_id' => $video->id])
+                    ->first();
         if ($like) {
             $result = $fav ? false :
                 //create kon
-                VideoFavorite::query()->create([
-                    VideoFavorite::col_video_id => $video->id,
-                    VideoFavorite::col_user_id => $user->id,
-                    VideoFavorite::col_user_ip => null
-                ]);
+                VideoFavorite::query()
+                             ->create([
+                                 VideoFavorite::col_video_id => $video->id,
+                                 VideoFavorite::col_user_id  => $user->id,
+                                 VideoFavorite::col_user_ip  => null
+                             ]);
 
         } else {
             $result = $fav ?
-                VideoFavorite::query()->where([
-                    VideoFavorite::col_video_id => $video->id,
-                    VideoFavorite::col_user_id => $user->id,
-                    VideoFavorite::col_user_ip => null
-                ])->delete() : false;
+                VideoFavorite::query()
+                             ->where([
+                                 VideoFavorite::col_video_id => $video->id,
+                                 VideoFavorite::col_user_id  => $user->id,
+                                 VideoFavorite::col_user_ip  => null
+                             ])
+                             ->delete() : false;
         }
         return $result;
     }
@@ -298,27 +310,32 @@ class VideoService extends BaseService
      */
     private static function GuestLikeUnlike($video, $like)
     {
-        $fav = VideoFavorite::query()->where([
-            VideoFavorite::col_video_id => $video->id,
-            VideoFavorite::col_user_id => null,
-            VideoFavorite::col_user_ip => client_ip()
-        ])->first();
+        $fav = VideoFavorite::query()
+                            ->where([
+                                VideoFavorite::col_video_id => $video->id,
+                                VideoFavorite::col_user_id  => null,
+                                VideoFavorite::col_user_ip  => client_ip()
+                            ])
+                            ->first();
 
         if ($like) {
             //save
             $result = $fav ? false :
-                VideoFavorite::query()->create([
-                    VideoFavorite::col_video_id => $video->id,
-                    VideoFavorite::col_user_id => null,
-                    VideoFavorite::col_user_ip => client_ip()
-                ]);
+                VideoFavorite::query()
+                             ->create([
+                                 VideoFavorite::col_video_id => $video->id,
+                                 VideoFavorite::col_user_id  => null,
+                                 VideoFavorite::col_user_ip  => client_ip()
+                             ]);
         } else {
             $result = $fav ?
-                VideoFavorite::query()->where([
-                    VideoFavorite::col_video_id => $video->id,
-                    VideoFavorite::col_user_id => null,
-                    VideoFavorite::col_user_ip => client_ip()
-                ])->delete() : false;
+                VideoFavorite::query()
+                             ->where([
+                                 VideoFavorite::col_video_id => $video->id,
+                                 VideoFavorite::col_user_id  => null,
+                                 VideoFavorite::col_user_ip  => client_ip()
+                             ])
+                             ->delete() : false;
         }
         return $result;
     }

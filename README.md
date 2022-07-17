@@ -1,64 +1,54 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Laravel Aparat Web Application
+> Video Sharing Service 
+> 
+> idea come from this [Aparat](aparat.com)
+> 
+> you can see read more from [wikipedia](https://en.wikipedia.org/wiki/Aparat) article
 
-## About Laravel
+<a name="database"></a>
+# DATABASE
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<a name="login_register"></a>
+# Login/Register
+    
+> For Register Or Login each User must provide a `mobile number` (IR)
+> 
+>Laravel `Passport`  used for implement Authentication 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<a name="user"></a>
+# USER PANEL
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**List of User Abilities**
+**_Login/Register_**
+1. :heavy_check_mark: Login/Register with thirs Mobile Number
 
-## Learning Laravel
+**_Channel**_   
+1. :heavy_check_mark: Create a Channel
+1. :heavy_check_mark: Select an Image as a Baner for own Channel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+**_Video_**
+1. :heavy_check_mark: Upload a Video for Channel
+1. :heavy_check_mark: Set a Image as video PosertFrame
+1. :heavy_check_mark: Republish a Video
+1. :heavy_check_mark: Get Video List
+1. :heavy_check_mark: Like a Video
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**_Category_**
+1. :heavy_check_mark: Create a Category With Banner for it
+1. :heavy_check_mark: Get User Category List
+1. :heavy_check_mark: Get Category Lists
 
-## Laravel Sponsors
+**_PlayList_**   
+1. :heavy_check_mark: Get PlayList List
+1. :heavy_check_mark: Create PlayLists with Set Image as a Baner
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+**_Tag_**   
+1. :heavy_check_mark: Get Tag List
+1. :heavy_check_mark: Get User Own Tag List
+1. :heavy_check_mark: Create TagList with Baner
+1. :heavy_check_mark: 
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+> This Project is **_~~Not Complited~~_**
+see part 74
